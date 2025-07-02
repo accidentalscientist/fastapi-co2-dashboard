@@ -40,20 +40,6 @@ export interface ComparisonData {
   last_updated: string;
 }
 
-export interface HealthStatus {
-  status: string;
-  database_connected: boolean;
-  last_data_update: string | null;
-  scheduler_running: boolean;
-  total_records: number;
-  uptime: string;
-}
-
-export interface LastUpdateInfo {
-  last_updated: string | null;
-  seconds_ago: number | null;
-}
-
 class ApiClient {
   private baseUrl: string;
 
@@ -134,10 +120,6 @@ class ApiClient {
     const endpoint = `/dashboard/emissions-comparison${queryString ? `?${queryString}` : ''}`;
     
     return this.request<ComparisonData>(endpoint);
-  }
-
-  async getCountries(): Promise<{ countries: string[] }> {
-    return this.request<{ countries: string[] }>('/countries');
   }
 }
 
