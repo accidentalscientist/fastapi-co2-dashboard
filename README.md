@@ -58,6 +58,19 @@ Built as part of a fullstack home assignment to demonstrate end-to-end capabilit
 - The frontend auto-refreshes every **30 seconds** using `setInterval()` to fetch updated data and reflect changes in charts and stats.
 - You can also manually refresh data with the **Refresh** button.
 
+## Why this approach?
+I chose to implement long polling and periodic background updates for several reasons:
+
+- Simplicity & Reliability: Long polling (via setInterval) offers a straightforward and robust way to keep the frontend updated without adding complexity like WebSockets or Server-Sent Events, which are often unnecessary for dashboards with low-to-medium update frequency.
+
+- Data Nature: The sustainability metrics used (CO₂ emissions, renewable energy) are updated periodically from public sources and do not change every second. A refresh interval of 30 seconds strikes a good balance between data freshness and performance.
+
+- Backend Efficiency: By using a background scheduler (scheduler.py) to periodically fetch and store new data in the database, I reduce repeated API calls on every frontend request, avoiding rate-limiting issues and improving scalability.
+
+- User Control: Including a manual refresh button gives users the flexibility to trigger immediate updates if needed, without waiting for the next automatic refresh.
+
+This hybrid approach ensures consistent, timely, and resource-efficient updates, while keeping the overall architecture simple and maintainable.
+
 ---
 
 ## 🧪 Testing Approach (not implemented due to time constraints)
