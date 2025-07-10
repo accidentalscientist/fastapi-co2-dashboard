@@ -25,12 +25,8 @@ async def get_dashboard_stats(db=Depends(get_database)):
         # Get total countries
         countries = await emissions_collection.distinct("country")
         total_countries = len(countries)
-        
-        # Get latest year
-        latest_emission = await emissions_collection.find_one(
-            {}, sort=[("year", -1)]
-        )
-        latest_year = latest_emission["year"] if latest_emission else 2023
+
+        latest_year = 2021
         
         # Calculate total CO2 emissions for latest year
         pipeline = [
@@ -43,11 +39,15 @@ async def get_dashboard_stats(db=Depends(get_database)):
         # Calculate average renewable percentage
         energy_pipeline = [
             {"$match": {"year": latest_year}},
-            {"$group": {"_id": None, "avg": {"$avg": "$renewable_percentage"}}}
+            {"$addFields": {
+                "renewable_percentage_num": {"$toDouble": "$renewable_percentage"}
+            }},
+            {"$group": {"_id": None, "avg": {"$avg": "$renewable_percentage_num"}}}
         ]
         avg_renewable_result = await energy_collection.aggregate(energy_pipeline).to_list(1)
         avg_renewable_percentage = avg_renewable_result[0]["avg"] if avg_renewable_result else 0
-        
+
+
         # Get top and worst performers by CO2 per capita
         top_performers = await emissions_collection.find(
             {"year": latest_year, "co2_per_capita": {"$exists": True}},

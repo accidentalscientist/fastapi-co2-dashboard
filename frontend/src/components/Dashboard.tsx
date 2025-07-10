@@ -29,7 +29,7 @@ export function Dashboard({ className }: DashboardProps) {
       const [statsData, co2Data, renewableEnergyData, emissionsComparison] = await Promise.all([
         apiClient.getDashboardStats(),
         apiClient.getCO2TimeSeries({ start_year: 2018, end_year: 2023 }),
-        apiClient.getRenewableEnergyData({ year: 2023, limit: 12 }),
+        apiClient.getRenewableEnergyData({ year: 2021, limit: 12 }),
         apiClient.getEmissionsComparison({ compare_years: [2020, 2023], limit: 10 })
       ]);
 

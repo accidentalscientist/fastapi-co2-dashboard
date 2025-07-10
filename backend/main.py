@@ -16,12 +16,6 @@ async def lifespan(app: FastAPI):
     # Startup
     await connect_to_mongo()
     
-    # Seed initial data
-    data_service = DataService()
-    from db import get_database
-    db = await get_database()
-    await data_service.seed_historical_data(db)
-    
     start_scheduler()
     yield
     # Shutdown

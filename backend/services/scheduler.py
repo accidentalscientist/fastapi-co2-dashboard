@@ -18,26 +18,8 @@ data_service = DataService()
 async def update_sustainability_data():
     """Background job to update sustainability data"""
     try:
-        logger.info("Starting scheduled data update...")
-        
         db = await get_database()
-        
-        # Update emissions data
-        await data_service.update_emissions_data(db)
-        
-        # Update energy data
-        await data_service.update_energy_data(db)
-        
-        # Update metadata with last update time
-        metadata_collection = db["metadata"]
-        await metadata_collection.update_one(
-            {"key": "last_data_update"},
-            {"$set": {"key": "last_data_update", "value": datetime.utcnow()}},
-            upsert=True
-        )
-        
-        logger.info("Scheduled data update completed successfully")
-        
+        await data_service.seed_historical_data(db)
     except Exception as e:
         logger.error(f"Error in scheduled data update: {e}")
 
